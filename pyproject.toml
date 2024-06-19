@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "geradordecodigos"
+version = "0.1.0"
+description = ""
+authors = ["dddd66 <80369241+dddd66@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pymediainfo = "^6.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
