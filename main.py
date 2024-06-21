@@ -48,43 +48,43 @@ class App:
     def __init__(self, win) -> None:
         self.window = win
         self.window.title("Gerador de Códigos")
-        self.window.geometry("936x753")  # You can adjust the size as needed
+        self.window.geometry("936x753")
 
-        # Creating a scrollable frame
+        # Criando o frame scrollavel
         self.scrollable_frame = ScrollableFrame(self.window)
         self.scrollable_frame.pack(fill="both", expand=True)
 
-        # Frame that will contain all the widgets
+        # Frame que vai conter os widgets
         self.frame = tk.Frame(self.scrollable_frame.scrollable_frame)
         self.frame.pack(fill="both", expand=True)
 
-        self.create_widgets()
+        self.criar_widgets()
 
     def criar_widgets(self) -> None:
         self.topo = tk.LabelFrame(self.frame, text="Informações sobre o filme", padx=10, pady=10)
         self.topo.grid(row=0, column=0, sticky="ew")
 
-        # Create a frame for the buttons
+        # Criando frame
         button_frame = tk.Frame(self.frame)
         button_frame.grid(row=3, column=0, padx=0, pady=0, sticky="ew")
 
-        # Place the buttons inside the button frame
+        # Botões dentro do frame
         button = tk.Button(button_frame, text="Gerar Código", command=self.processar_input)
         button.grid(row=0, column=0, padx=5, pady=5)
         limpar = tk.Button(button_frame, text="Limpar Campos", command=self.limpar)
         limpar.grid(row=0, column=1, padx=5, pady=5)
 
-        # Ensure buttons stay centered by adding column weights
+        # Garantir que os botões continuem centralizados adicionando pesos de coluna
         button_frame.grid_columnconfigure(0, weight=1)
         button_frame.grid_columnconfigure(1, weight=1)
 
-        # Create sections
+        # Seções
         self.create_movie_info_section()
-        self.create_release_info_section()
-        self.create_screens_section()
-        self.create_additional_info_section()
+        self.criar_widget_releases()
+        self.criar_widget_screenshots()
+        self.criar_widget_info_adicional()
 
-        # Ensure the frame resizes correctly
+        # Garantir que o frame redimensiona corretamente
         self.frame.grid_rowconfigure(0, weight=1)
         self.frame.grid_rowconfigure(1, weight=1)
         self.frame.grid_rowconfigure(2, weight=0)
@@ -161,102 +161,104 @@ class App:
 
         padding = {'padx': 2, 'pady': 2}
 
-        self.file_path_entry = tk.Entry(self.meio)
+        self.file_path_entry = tk.Entry(self.release)
         self.file_path_entry.grid(row=0, column=1, columnspan=3, **padding, sticky="ew")
 
-        self.pick_file_button = tk.Button(self.meio, text="Escolher arquivo", command=self.pick_file)
+        self.pick_file_button = tk.Button(self.release, text="Escolher arquivo", command=self.pick_file)
         self.pick_file_button.grid(row=0, column=0, **padding, sticky="ew")
 
-        self.qualidade_label = tk.Label(self.meio, text="Qualidade:", fg="red")
+        self.qualidade_label = tk.Label(self.release, text="Qualidade:", fg="red")
         self.qualidade_label.grid(row=1, column=0, sticky="e", **padding)
-        self.qualidade_combobox = ttk.Combobox(self.meio,
+        self.qualidade_combobox = ttk.Combobox(self.release,
                                                values=["Blu-Ray Full", "BDRemux", "BDRip", "DVD Full", "DVDRip",
                                                        "HDTVRip", "TVRip", "VHSRip", "WEB-DL", "WEBRip", "Outro"])
         self.qualidade_combobox.grid(row=1, column=1, columnspan=3, sticky="ew", **padding)
 
-        self.videocodec_label = tk.Label(self.meio, text="Video Codec:", fg="red")
+        self.videocodec_label = tk.Label(self.release, text="Video Codec:", fg="red")
         self.videocodec_label.grid(row=2, column=0, sticky="e", **padding)
-        self.videocodec_entry = tk.Entry(self.meio)
+        self.videocodec_entry = tk.Entry(self.release)
         self.videocodec_entry.grid(row=2, column=1, columnspan=3, sticky="ew", **padding)
 
-        self.videobitrate_label = tk.Label(self.meio, text="Video Bitrate:", fg="red")
+        self.videobitrate_label = tk.Label(self.release, text="Video Bitrate:", fg="red")
         self.videobitrate_label.grid(row=3, column=0, sticky="e", **padding)
-        self.videobitrate_entry = tk.Entry(self.meio)
+        self.videobitrate_entry = tk.Entry(self.release)
         self.videobitrate_entry.grid(row=3, column=1, columnspan=3, sticky="ew", **padding)
 
-        self.audiocodec_label = tk.Label(self.meio, text="Áudio Codec:", fg="red")
+        self.audiocodec_label = tk.Label(self.release, text="Áudio Codec:", fg="red")
         self.audiocodec_label.grid(row=4, column=0, sticky="e", **padding)
-        self.audiocodec_entry = tk.Entry(self.meio)
+        self.audiocodec_entry = tk.Entry(self.release)
         self.audiocodec_entry.grid(row=4, column=1, columnspan=3, sticky="ew", **padding)
 
-        self.audiobitrate_label = tk.Label(self.meio, text="Áudio Bitrate:", fg="red")
+        self.audiobitrate_label = tk.Label(self.release, text="Áudio Bitrate:", fg="red")
         self.audiobitrate_label.grid(row=5, column=0, sticky="e", **padding)
-        self.audiobitrate_entry = tk.Entry(self.meio)
+        self.audiobitrate_entry = tk.Entry(self.release)
         self.audiobitrate_entry.grid(row=5, column=1, columnspan=3, sticky="ew", **padding)
 
-        self.container_label = tk.Label(self.meio, text="Container:", fg="red")
+        self.container_label = tk.Label(self.release, text="Container:", fg="red")
         self.container_label.grid(row=6, column=0, sticky="e", **padding)
-        self.container_combobox = ttk.Combobox(self.meio, values=["MKV", "AVI"])
+        self.container_combobox = ttk.Combobox(self.release, values=["MKV", "AVI"])
         self.container_combobox.grid(row=6, column=1, columnspan=3, sticky="ew", **padding)
 
-        self.resolucao_label = tk.Label(self.meio, text="Resolução:", fg="red")
+        self.resolucao_label = tk.Label(self.release, text="Resolução:", fg="red")
         self.resolucao_label.grid(row=7, column=0, sticky="e", **padding)
-        self.resolucao_entry = tk.Entry(self.meio)
+        self.resolucao_entry = tk.Entry(self.release)
         self.resolucao_entry.grid(row=7, column=1, columnspan=3, sticky="ew", **padding)
 
-        self.aspectratio_label = tk.Label(self.meio, text="Formato da Tela:", fg="red")
+        self.aspectratio_label = tk.Label(self.release, text="Formato da Tela:", fg="red")
         self.aspectratio_label.grid(row=8, column=0, sticky="e", **padding)
-        self.aspectratio_entry = tk.Entry(self.meio)
+        self.aspectratio_entry = tk.Entry(self.release)
         self.aspectratio_entry.grid(row=8, column=1, columnspan=3, sticky="ew", **padding)
 
-        self.framerate_label = tk.Label(self.meio, text="Frame Rate:", fg="red")
+        self.framerate_label = tk.Label(self.release, text="Frame Rate:", fg="red")
         self.framerate_label.grid(row=9, column=0, sticky="e", **padding)
-        self.framerate_entry = tk.Entry(self.meio)
+        self.framerate_entry = tk.Entry(self.release)
         self.framerate_entry.grid(row=9, column=1, columnspan=3, sticky="ew", **padding)
 
-        self.tamanho_label = tk.Label(self.meio, text="Tamanho:", fg="red")
+        self.tamanho_label = tk.Label(self.release, text="Tamanho:", fg="red")
         self.tamanho_label.grid(row=10, column=0, sticky="e", **padding)
-        self.tamanho_entry = tk.Entry(self.meio)
+        self.tamanho_entry = tk.Entry(self.release)
         self.tamanho_entry.grid(row=10, column=1, columnspan=3, sticky="ew", **padding)
 
-        self.legendas_label = tk.Label(self.meio, text="Legendas:", fg="red")
+        self.legendas_label = tk.Label(self.release, text="Legendas:", fg="red")
         self.legendas_label.grid(row=11, column=0, sticky="e", **padding)
-        self.legendas_combobox = ttk.Combobox(self.meio, values=["Anexas", "Fixas", "Sem legenda", "No torrent"])
+        self.legendas_combobox = ttk.Combobox(self.release, values=["Anexas", "Fixas", "Sem legenda", "No torrent"])
         self.legendas_combobox.grid(row=11, column=1, columnspan=3, sticky="ew", **padding)
 
-        self.release_label = tk.Label(self.meio, text="Release:", fg="red")
+        self.release_label = tk.Label(self.release, text="Release:", fg="red")
         self.release_label.grid(row=12, column=0, sticky="e", **padding)
-        self.release_entry = tk.Entry(self.meio)
+        self.release_entry = tk.Entry(self.release)
         self.release_entry.grid(row=12, column=1, columnspan=3, sticky="ew", **padding)
 
         for i in range(13):
-            self.meio.grid_rowconfigure(i, weight=1)
+            self.release.grid_rowconfigure(i, weight=1)
         for j in range(4):
-            self.meio.grid_columnconfigure(j, weight=1)
+            self.release.grid_columnconfigure(j, weight=1)
 
     def colar_screens(self, event) -> str | None:
         try:
-            clipboard_content = self.frame.clipboard_get()  # Use the frame to get clipboard content
+            clipboard_content = self.frame.clipboard_get()
         except tk.TclError:
             clipboard_content = ""
 
-        # Split content by new lines
-        urls = clipboard_content.strip(" ")
-        urls = clipboard_content.split("\n")
-        print(len(urls))
+        # Limpar conteúdo do teclado antes de colar
+        urls = clipboard_content.replace(" ", "")
+        urls = urls.split("\n")
+        urls = [url for url in urls if len(url) > 2]
+
+        # Se não for um tamanho válido para preenchimento
 
         if len(urls) not in (1, 4, 5, 6, 7, 8, 9):
-            return
+            return None
 
-        # Clear the triggering entry
+        # Limpar o field que chamou, pra não ficar todo o conteúdo colado nesse field.
         event.widget.delete(0, tk.END)
 
-        # Populate the screenshot entries with the URLs, starting from the first entry
+        # Coloca as URLs em cada entry
         for entry, url in zip(self.screenshot_entries, urls):
             entry.delete(0, tk.END)
             entry.insert(0, url)
 
-        return "break"  # Prevent the default paste behavior
+        return "break"  # Se der errado, apenas colar no field selecionado
 
     def criar_widget_screenshots(self) -> None:
         padding = {'padx': 2, 'pady': 2}
@@ -375,7 +377,7 @@ class App:
             self.release_entry
         ]
 
-        for field in required_fields:
+        for field in fields_necessarios:
             if isinstance(field, tk.Text):
                 if not field.get("1.0", "end-1c").strip():
                     messagebox.showwarning("Atenção", "Todos os campos em vermelho precisam ser preenchidos.")
@@ -389,14 +391,13 @@ class App:
                     messagebox.showwarning("Atenção", "Todos os campos em vermelho precisam ser preenchidos.")
                     return
 
-        #
         screenshot_count = sum(1 for entry in self.screenshot_entries if entry.get())
         if screenshot_count < 4 or screenshot_count not in [4, 6, 8]:
             messagebox.showwarning("Atenção", "Pelo menos 4 campos de screenshot precisam ser preenchidos.")
             return
 
         data_valores = {}
-        entry_widgets = [
+        entries = [
             (self.titulo_brasil_entry, "titulonobrasil"),
             (self.titulo_original_entry, "titulooriginal"),
             (self.sinopse_entry, "sinopse"),
@@ -409,7 +410,6 @@ class App:
             (self.imdb_entry, "imdb"),
             (self.idioma_do_audio_entry, "idiomadoaudio"),
             (self.ano_entry, "ano"),
-            #(self.file_path_entry, "Caminho do Arquivo"),
             (self.videocodec_entry, "videocodec"),
             (self.videobitrate_entry, "videobitrate"),
             (self.audiocodec_entry, "audiocodec"),
@@ -433,7 +433,7 @@ class App:
             if entry.get():
                 data_valores["screenshots"].append(entry.get())
 
-        for widget, key in entry_widgets:
+        for widget, key in entries:
             if isinstance(widget, tk.Text):
                 data_valores[key] = widget.get("1.0", "end-1c")
             elif isinstance(widget, ttk.Combobox):
@@ -444,28 +444,29 @@ class App:
         output_window = tk.Toplevel(self.window)
         output_window.title("Código")
 
-        # 
         output_text_widget = tk.Text(output_window, wrap="word", height=20, width=60)
         output_text_widget.insert(tk.END, self.gerar_codigo(data_valores))
         output_text_widget.pack(fill="both", expand=True)
 
-        # 
         copy_button = tk.Button(output_window, text="Copiar",
                                 command=lambda: self.copiar_para_teclado(output_text_widget))
 
         copy_button.pack(anchor="s", expand=True, ipadx=5, ipady=5)
 
-    def copiar_para_teclado(self, widget):
+    def copiar_para_teclado(self, widget) -> None:
         self.window.clipboard_clear()
         self.window.clipboard_append(widget.get("1.0", tk.END))
 
-    def gerar_codigo(self, data: dict) -> str:
-
+    @staticmethod
+    def gerar_codigo(data: dict) -> str:
         titulonobrasil = data["titulonobrasil"].strip("\n")
         titulooriginal = data["titulooriginal"].strip("\n")
         release = data["release"].strip("\n")
         imdb = re.sub(r"(\d+)/.*", r"\1", data['imdb'])
-        codigo = f"""[tablePrinc][tr][titMasc]Título do Filme[/titMasc][/tr][tr][titTrad]{titulonobrasil}[/titTrad][titOri]{titulooriginal}[/titOri][release]{release}[/release][/tr][tr][posterMasc]Poster[/posterMasc][sinopseMasc]Sinopse[/sinopseMasc][/tr][tr][poster][posterIma]{data["poster"]}[/posterIma][/poster][sinopse]{data["sinopse"]}[/sinopse][tableScreen]Screenshots[/tableScreen]"""
+        codigo = f"""[tablePrinc][tr][titMasc]Título do Filme[/titMasc][/tr][tr][titTrad]{titulonobrasil}[/titTrad]\
+[titOri]{titulooriginal}[/titOri][release]{release}[/release][/tr][tr][posterMasc]Poster[/posterMasc]\
+[sinopseMasc]Sinopse[/sinopseMasc][/tr][tr][poster][posterIma]{data["poster"]}[/posterIma][/poster]\
+[sinopse]{data["sinopse"]}[/sinopse][tableScreen]Screenshots[/tableScreen]"""
 
         # Add screenshots
         screenshots = data.get('screenshots', [])
@@ -480,7 +481,9 @@ class App:
                 codigo += f'[{side}][screenIma]{screenshots[i]}[/screenIma][/{side}]'
             codigo += '[/tr]'  # Close the last row of screenshots
 
-        codigo += f"""[closeTab][/closeTab][/tr][/tablePrinc][tablePrinc][tr][posterMasc]Elenco[/posterMasc][infoMasc]Informações sobre o filme[/infoMasc][infoMasc]Informações sobre o release[/infoMasc][/tr][tr][elenco]{data["elenco"]}[/elenco][info][b]Gênero: [/b]{data["genero"]}
+        codigo += f"""[closeTab][/closeTab][/tr][/tablePrinc][tablePrinc][tr][posterMasc]Elenco[/posterMasc]\
+[infoMasc]Informações sobre o filme[/infoMasc][infoMasc]Informações sobre o release[/infoMasc][/tr][tr]\
+[elenco]{data["elenco"]}[/elenco][info][b]Gênero: [/b]{data["genero"]}
 [b]Diretor: [/b]{data["diretor"]}
 [b]Duração: [/b]{data["duracao"]} minutos
 [b]Ano de Lançamento: [/b]{data["ano"]}
@@ -500,12 +503,16 @@ class App:
 [b]Legendas: [/b]{data['legenda']}[/info][/tr]"""
 
         if data.get('premiacoes'):
-            codigo += f"[tr][infoExtraMasc]Premiações[/infoExtraMasc][/tr][tr][infoExtra]{data['premiacoes']}[/infoExtra][/tr]\n"
+            codigo += f"[tr][infoExtraMasc]Premiações[/infoExtraMasc][/tr][tr][infoExtra]{data['premiacoes']}\
+[/infoExtra][/tr]\n"
         if data.get('curiosidade'):
-            codigo += f"[tr][infoExtraMasc]Curiosidades[/infoExtraMasc][/tr][tr][infoExtra]{data['curiosidade']}[/infoExtra][/tr]\n"
+            codigo += f"[tr][infoExtraMasc]Curiosidades[/infoExtraMasc][/tr][tr][infoExtra]{data['curiosidade']}\
+[/infoExtra][/tr]\n"
         if data.get('critica'):
-            codigo += f"[tr][infoExtraMasc]Crítica[/infoExtraMasc][/tr][tr][infoExtra]{data['critica']}[/infoExtra][/tr]\n"
-        codigo += "[tr][rodape]Coopere, deixe semeando ao menos duas vezes o tamanho do arquivo que baixar.[/rodape][/tr][/tablePrinc]"
+            codigo += f"[tr][infoExtraMasc]Crítica[/infoExtraMasc][/tr][tr][infoExtra]{data['critica']}[/infoExtra]\
+[/tr]\n"
+        codigo += "[tr][rodape]Coopere, deixe semeando ao menos duas vezes o tamanho do arquivo que baixar.[/rodape]\
+[/tr][/tablePrinc]"
         return codigo
 
     def pick_file(self) -> None:
@@ -584,7 +591,7 @@ class App:
 
 
 if __name__ == "__main__":
-    window = tk.Tk()  #root
-    #window.iconbitmap('/resources/icon.bmp')
+    window = tk.Tk()
+    window.iconbitmap('resources/icon.ico')
     App(window)
-    window.mainloop()  #loop
+    window.mainloop()  # loop
