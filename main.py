@@ -6,7 +6,7 @@ import re
 
 
 class ScrollableFrame(ttk.Frame):
-    def __init__(self, container, *args, **kwargs):
+    def __init__(self, container, *args, **kwargs) -> None:
         super().__init__(container, *args, **kwargs)
 
         self.canvas = tk.Canvas(self)
@@ -30,12 +30,12 @@ class ScrollableFrame(ttk.Frame):
         # Bind the mouse wheel event
         self.bind_mouse_wheel()
 
-    def bind_mouse_wheel(self):
+    def bind_mouse_wheel(self) -> None:
         self.canvas.bind_all("<MouseWheel>", self._on_mouse_wheel)
         self.canvas.bind_all("<Button-4>", self._on_mouse_wheel)  # For Linux
         self.canvas.bind_all("<Button-5>", self._on_mouse_wheel)  # For Linux
 
-    def _on_mouse_wheel(self, event):
+    def _on_mouse_wheel(self, event) -> None:
         if event.num == 4:  # For Linux
             self.canvas.yview_scroll(-1, "units")
         elif event.num == 5:  # For Linux
@@ -45,8 +45,8 @@ class ScrollableFrame(ttk.Frame):
 
 
 class App:
-    def __init__(self, window):
-        self.window = window
+    def __init__(self, win) -> None:
+        self.window = win
         self.window.title("Gerador de Códigos")
         self.window.geometry("936x753")  # You can adjust the size as needed
 
@@ -60,7 +60,7 @@ class App:
 
         self.create_widgets()
 
-    def create_widgets(self):
+    def criar_widgets(self) -> None:
         self.topo = tk.LabelFrame(self.frame, text="Informações sobre o filme", padx=10, pady=10)
         self.topo.grid(row=0, column=0, sticky="ew")
 
@@ -71,7 +71,6 @@ class App:
         # Place the buttons inside the button frame
         button = tk.Button(button_frame, text="Gerar Código", command=self.processar_input)
         button.grid(row=0, column=0, padx=5, pady=5)
-
         limpar = tk.Button(button_frame, text="Limpar Campos", command=self.limpar)
         limpar.grid(row=0, column=1, padx=5, pady=5)
 
@@ -156,9 +155,9 @@ class App:
         self.imdb_entry = tk.Entry(self.topo)
         self.imdb_entry.grid(row=7, column=1, columnspan=4, sticky="ew")
 
-    def create_release_info_section(self):
-        self.meio = tk.LabelFrame(self.frame, text="Informações sobre o release", padx=5, pady=5)
-        self.meio.grid(row=1, column=0, padx=0, pady=0, sticky="news")
+    def criar_widget_releases(self) -> None:
+        self.release = tk.LabelFrame(self.frame, text="Informações sobre o release", padx=5, pady=5)
+        self.release.grid(row=1, column=0, padx=0, pady=0, sticky="news")
 
         padding = {'padx': 2, 'pady': 2}
 
@@ -235,8 +234,7 @@ class App:
         for j in range(4):
             self.meio.grid_columnconfigure(j, weight=1)
 
-    def colar_screens(self, event):
-        # Get content from the clipboard
+    def colar_screens(self, event) -> str | None:
         try:
             clipboard_content = self.frame.clipboard_get()  # Use the frame to get clipboard content
         except tk.TclError:
@@ -260,7 +258,7 @@ class App:
 
         return "break"  # Prevent the default paste behavior
 
-    def create_screens_section(self):
+    def criar_widget_screenshots(self) -> None:
         padding = {'padx': 2, 'pady': 2}
         self.baixo = tk.LabelFrame(self.frame, text="Screens", padx=5, pady=5)
         self.baixo.grid(row=0, column=3, padx=0, pady=0, sticky="news")
@@ -283,7 +281,7 @@ class App:
             self.screenshot_entries.append(entry)
         self.screenshot_entries[0].bind('<Control-v>', self.colar_screens)
 
-    def create_additional_info_section(self):
+    def criar_widget_info_adicional(self) -> None:
         self.dir = tk.LabelFrame(self.frame, text="Informações Adicionais")
         self.dir.grid(row=1, column=3, padx=0, pady=0, sticky="news")
 
@@ -311,7 +309,7 @@ class App:
         critica_scroll.grid(row=2, column=5, sticky='nsew')
         self.critica_entry.config(yscrollcommand=critica_scroll.set)
 
-    def limpar(self):
+    def limpar(self) -> None:
         entry_widgets = [
             self.titulo_brasil_entry,
             self.titulo_original_entry,
@@ -351,9 +349,8 @@ class App:
         self.container_combobox.set('')
         self.legendas_combobox.set('')
 
-    def processar_input(self):
-
-        required_fields = [
+    def processar_input(self) -> None:
+        fields_necessarios = [
             self.titulo_brasil_entry,
             self.titulo_original_entry,
             self.sinopse_entry,
@@ -511,7 +508,7 @@ class App:
         codigo += "[tr][rodape]Coopere, deixe semeando ao menos duas vezes o tamanho do arquivo que baixar.[/rodape][/tr][/tablePrinc]"
         return codigo
 
-    def pick_file(self):
+    def pick_file(self) -> None:
         file_path = filedialog.askopenfilename(initialdir="/", title="Select File",
                                                filetypes=(("Video Files", "*.mkv *.avi"), ("All files", "*.*")))
         if file_path:
@@ -566,8 +563,8 @@ class App:
         return codec_map.get(codec, codec)
 
     @staticmethod
-    def to_gb(ibytes: int) -> float:
-        return ibytes / (2 ** 30)
+    def to_gb(byt: int) -> float:
+        return byt / 1073741824
 
     def extrair_metadata(self, caminho: str) -> dict:
         video = MediaInfo.parse(caminho).to_data()
