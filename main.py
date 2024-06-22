@@ -27,7 +27,6 @@ class ScrollableFrame(ttk.Frame):
         self.scrollbar_x.pack(side="bottom", fill="x")
         self.canvas.pack(side="left", fill="both", expand=True)
 
-        # Bind the mouse wheel event
         self.bind_mouse_wheel()
 
     def bind_mouse_wheel(self) -> None:
@@ -468,18 +467,17 @@ class App:
 [sinopseMasc]Sinopse[/sinopseMasc][/tr][tr][poster][posterIma]{data["poster"]}[/posterIma][/poster]\
 [sinopse]{data["sinopse"]}[/sinopse][tableScreen]Screenshots[/tableScreen]"""
 
-        # Add screenshots
         screenshots = data.get('screenshots', [])
         num_screens = len(screenshots)
         if num_screens in {4, 6, 8}:
             for i in range(num_screens):
                 if i % 2 == 0:
                     if i != 0:
-                        codigo += '[/tr]'  # Close the previous row
-                    codigo += '[tr]'  # Start a new row for every pair of screenshots
+                        codigo += '[/tr]'  # Fechar a linha anterior
+                    codigo += '[tr]'  # Começar uma nova coluna para cada par de screenshots
                 side = 'screenLeft' if i % 2 == 0 else 'screenRight'
                 codigo += f'[{side}][screenIma]{screenshots[i]}[/screenIma][/{side}]'
-            codigo += '[/tr]'  # Close the last row of screenshots
+            codigo += '[/tr]'  # Fechar a última linha de screenshots
 
         codigo += f"""[closeTab][/closeTab][/tr][/tablePrinc][tablePrinc][tr][posterMasc]Elenco[/posterMasc]\
 [infoMasc]Informações sobre o filme[/infoMasc][infoMasc]Informações sobre o release[/infoMasc][/tr][tr]\
