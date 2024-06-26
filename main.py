@@ -35,9 +35,9 @@ class ScrollableFrame(ttk.Frame):
         self.canvas.bind_all("<Button-5>", self._on_mouse_wheel)  # For Linux
 
     def _on_mouse_wheel(self, event) -> None:
-        if event.num == 4:  # For Linux
+        if event.num == 4:  # Para linux
             self.canvas.yview_scroll(-1, "units")
-        elif event.num == 5:  # For Linux
+        elif event.num == 5:  # Para linux
             self.canvas.yview_scroll(1, "units")
         else:
             self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
