@@ -590,6 +590,9 @@ class App:
 
 if __name__ == "__main__":
     window = tk.Tk()
-    window.iconbitmap('resources/icon.ico')
+    try:
+        window.iconbitmap('resources/icon.ico')
+    except Exception as e:
+        print(e)
     App(window)
     window.mainloop()  # loop
