@@ -16,7 +16,7 @@ class ScrollableFrame(ttk.Frame):
 
         self.scrollable_frame.bind(
             "<Configure>",
-            lambda e: self.canvas.configure(
+            lambda a: self.canvas.configure(
                 scrollregion=self.canvas.bbox("all")
             )
         )
@@ -26,7 +26,6 @@ class ScrollableFrame(ttk.Frame):
         self.scrollbar_y.pack(side="right", fill="y")
         self.scrollbar_x.pack(side="bottom", fill="x")
         self.canvas.pack(side="left", fill="both", expand=True)
-
         self.bind_mouse_wheel()
 
     def bind_mouse_wheel(self) -> None:
