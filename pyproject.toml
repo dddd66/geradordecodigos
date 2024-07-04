@@ -10,6 +10,9 @@ python = "^3.12"
 pymediainfo = "^6.1.0"
 
 
+[tool.poetry.group.dev.dependencies]
+cx-freeze = "^7.1.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
