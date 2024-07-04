@@ -31,7 +31,7 @@ class ScrollableFrame(ttk.Frame):
     def bind_mouse_wheel(self) -> None:
         self.canvas.bind_all("<MouseWheel>", self._on_mouse_wheel)
         self.canvas.bind_all("<Button-4>", self._on_mouse_wheel)  # For Linux
-        self.canvas.bind_all("<Button-5>", self._on_mouse_wheel)  # For Linux
+        self.canvas.bind_all("<Button-5>", self._on_mouse_wheel)  # Para Linux
 
     def _on_mouse_wheel(self, event) -> None:
         if event.num == 4:  # Para linux
