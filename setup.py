@@ -20,7 +20,7 @@ if sys.platform == "win32":
 
 setup(
     name="gerador-de-codigos",
-    version="2.0.2",
+    version="2.0.2.2",
     description="Gerador de codigos Making Off",
     options={"build_exe": build_exe_options},
     executables=[Executable("main.py", base=base, icon="resources/icon.ico")],
