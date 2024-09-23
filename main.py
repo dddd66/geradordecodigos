@@ -548,8 +548,12 @@ class App:
             self.container_combobox.current(1)
 
     @staticmethod
-    def bitrate_format(bitrate: list) -> str:
+    def bitrate_format(bitrate: list) -> str | None:
+        if not bitrate:
+            return None
         bstring = str(bitrate[0])
+        if "M" in bstring:
+            return bstring
         bstring = bstring.replace(' ', '')
         kindex = bstring.index("k")
         return bstring[:kindex] + " " + bstring[kindex:]
