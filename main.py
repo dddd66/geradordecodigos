@@ -313,6 +313,7 @@ class App:
         entry_widgets = [
             self.titulo_brasil_entry,
             self.titulo_original_entry,
+            self.ano_entry,
             self.sinopse_entry,
             self.elenco_entry,
             self.pais_de_origem_entry,
