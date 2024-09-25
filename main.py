@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import os
 import re
-
+from typing import Optional
 
 class ScrollableFrame(ttk.Frame):
     def __init__(self, container, *args, **kwargs) -> None:
@@ -232,7 +232,7 @@ class App:
         for j in range(4):
             self.release.grid_columnconfigure(j, weight=1)
 
-    def colar_screens(self, event) -> str | None:
+    def colar_screens(self, event) -> Optional[str]:
         try:
             clipboard_content = self.frame.clipboard_get()
         except tk.TclError:
@@ -548,7 +548,8 @@ class App:
             self.container_combobox.current(1)
 
     @staticmethod
-    def bitrate_format(bitrate: list) -> str | None:
+
+    def bitrate_format(bitrate: list) -> Optional[str]:
         if not bitrate:
             return None
         bstring = str(bitrate[0])
