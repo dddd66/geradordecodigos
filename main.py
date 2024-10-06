@@ -5,6 +5,7 @@ import os
 import re
 from typing import Optional
 
+
 class ScrollableFrame(ttk.Frame):
     def __init__(self, container, *args, **kwargs) -> None:
         super().__init__(container, *args, **kwargs)
@@ -548,7 +549,6 @@ class App:
             self.container_combobox.current(1)
 
     @staticmethod
-
     def bitrate_format(bitrate: list) -> Optional[str]:
         if not bitrate:
             return None
