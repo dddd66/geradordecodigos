@@ -520,6 +520,9 @@ class App:
         if file_path:
             self.file_path_entry.delete(0, tk.END)
             self.file_path_entry.insert(0, file_path)
+        if not file_path:
+            return None
+
         mi = self.extrair_metadata(file_path)
 
         self.videocodec_entry.delete(0, tk.END)
@@ -560,35 +563,37 @@ class App:
         return bstring[:kindex] + " " + bstring[kindex:]
 
     @staticmethod
-    def substituir_codec(tracks, codec) -> str:
+    def substituir_codec(codec, track) -> str:
         codec_map = {"AVC": "h264",
-                     "XVID": "XviD"}
-        if codec == "MPEG Audio":
-            if tracks[2]["format_profile"] == "Layer 3":
-                return "MP3"
-            elif tracks[2]["format_profile"] == "Layer 2":
-                return "MP2"
-            else:
-                return "MP1"
+                     "XVID": "XviD",
+                     "A_MPEG/L3": "MP3",
+                     "A_MPEG/L2": "MP2",
+                     "A_MPEG/L1": "MP1"}
+        if track is not None:
+            if track.get('commercial_name') == "MPEG Audio":
+                codec = track.get('codec_id')
         return codec_map.get(codec, codec)
 
     @staticmethod
-    def to_gb(byt: int) -> float:
-        return byt / 1073741824
+    def to_gib(size_bytes: float) -> float:
+        return size_bytes / 1073741824
 
     def extrair_metadata(self, caminho: str) -> dict:
         video = MediaInfo.parse(caminho).to_data()
         tracks = video.get("tracks")
-        metadata = {"vcodec": self.substituir_codec(tracks, tracks[0].get("codecs_video", "")),
-                    "acodec": self.substituir_codec(tracks, tracks[0].get("audio_codecs", "")),
-                    "vbitrate": self.bitrate_format(tracks[1].get("other_bit_rate", "")),
-                    "abitrate": self.bitrate_format(tracks[2].get("other_bit_rate", "")),
-                    "resolucao": f'{tracks[1].get("sampled_width", "")} x {tracks[1].get("sampled_height", "")}',
-                    "aspectratio": tracks[1].get("other_display_aspect_ratio", ""),
-                    "fps": tracks[1].get("frame_rate", ""),
-                    "tamanho": "{:.2f} GB".format(self.to_gb(int(tracks[0].get("file_size", "")))),
-                    "release": os.path.basename(tracks[0].get("file_name", "")),
-                    "ext": tracks[0].get("file_extension", "")
+        general = tracks[0]
+        video_track = tracks[1]
+        audio_track = tracks[2]
+        metadata = {"vcodec": self.substituir_codec(general.get("codecs_video", ""), None),
+                    "acodec": self.substituir_codec(general.get("audio_codecs", ""), audio_track),
+                    "vbitrate": self.bitrate_format(video_track.get("other_bit_rate", "")),
+                    "abitrate": self.bitrate_format(audio_track.get("other_bit_rate", "")),
+                    "resolucao": f'{video_track.get("sampled_width", "")} x {video_track.get("sampled_height", "")}',
+                    "aspectratio": video_track.get("other_display_aspect_ratio", ""),
+                    "fps": video_track.get("frame_rate", ""),
+                    "tamanho": "{:.2f} GiB".format(self.to_gib(float(general.get("file_size", "")))),
+                    "release": os.path.basename(general.get("file_name", "")),
+                    "ext": general.get("file_extension", "")
                     }
         return metadata
 
