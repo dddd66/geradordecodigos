@@ -31,7 +31,7 @@ class ScrollableFrame(ttk.Frame):
 
     def bind_mouse_wheel(self) -> None:
         self.canvas.bind_all("<MouseWheel>", self._on_mouse_wheel)
-        self.canvas.bind_all("<Button-4>", self._on_mouse_wheel)  # For Linux
+        self.canvas.bind_all("<Button-4>", self._on_mouse_wheel)  # Para Linux
         self.canvas.bind_all("<Button-5>", self._on_mouse_wheel)  # Para Linux
 
     def _on_mouse_wheel(self, event) -> None:
@@ -552,11 +552,13 @@ class App:
             self.container_combobox.current(1)
 
     @staticmethod
-    def bitrate_format(bitrate: list) -> Optional[str]:
+    def formatar_bitrate(bitrate: list) -> Optional[str]:
         if not bitrate:
             return None
         bstring = str(bitrate[0])
         if "M" in bstring:
+            return bstring
+        if not any(char in bstring for char in ('G', 'B', 'K', 'M')):
             return bstring
         bstring = bstring.replace(' ', '')
         kindex = bstring.index("k")
@@ -586,8 +588,8 @@ class App:
         audio_track = tracks[2]
         metadata = {"vcodec": self.substituir_codec(general.get("codecs_video", ""), None),
                     "acodec": self.substituir_codec(general.get("audio_codecs", ""), audio_track),
-                    "vbitrate": self.bitrate_format(video_track.get("other_bit_rate", "")),
-                    "abitrate": self.bitrate_format(audio_track.get("other_bit_rate", "")),
+                    "vbitrate": self.formatar_bitrate(video_track.get("other_bit_rate", "")),
+                    "abitrate": self.formatar_bitrate(audio_track.get("other_bit_rate", "")),
                     "resolucao": f'{video_track.get("sampled_width", "")} x {video_track.get("sampled_height", "")}',
                     "aspectratio": video_track.get("other_display_aspect_ratio", ""),
                     "fps": video_track.get("frame_rate", ""),
