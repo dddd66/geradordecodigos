@@ -520,7 +520,7 @@ class App:
         if file_path:
             self.file_path_entry.delete(0, tk.END)
             self.file_path_entry.insert(0, file_path)
-        if not file_path:
+        else:
             return None
 
         mi = self.extrair_metadata(file_path)
