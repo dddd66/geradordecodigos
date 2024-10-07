@@ -4,6 +4,7 @@ from tkinter import ttk, filedialog, messagebox
 import os
 import re
 from typing import Optional
+import threading
 
 
 class ScrollableFrame(ttk.Frame):
@@ -163,7 +164,7 @@ class App:
         self.file_path_entry = tk.Entry(self.release)
         self.file_path_entry.grid(row=0, column=1, columnspan=3, **padding, sticky="ew")
 
-        self.pick_file_button = tk.Button(self.release, text="Escolher arquivo", command=self.pick_file)
+        self.pick_file_button = tk.Button(self.release, text="Escolher arquivo", command=self.abrir_thread_file)
         self.pick_file_button.grid(row=0, column=0, **padding, sticky="ew")
 
         self.qualidade_label = tk.Label(self.release, text="Qualidade:", fg="red")
@@ -514,17 +515,11 @@ class App:
 [/tr][/tablePrinc]"
         return codigo
 
-    def pick_file(self) -> None:
-        file_path = filedialog.askopenfilename(initialdir="/", title="Select File",
-                                               filetypes=(("Video Files", "*.mkv *.avi"), ("All files", "*.*")))
-        if file_path:
-            self.file_path_entry.delete(0, tk.END)
-            self.file_path_entry.insert(0, file_path)
-        else:
-            return None
-
+    def extrair(self, file_path: str) -> None:
         mi = self.extrair_metadata(file_path)
+        self.window.after(0, self.atualizar_fields_metadata, mi)
 
+    def atualizar_fields_metadata(self, mi: dict) -> None:
         self.videocodec_entry.delete(0, tk.END)
         self.videobitrate_entry.delete(0, tk.END)
         self.audiocodec_entry.delete(0, tk.END)
@@ -551,6 +546,20 @@ class App:
         else:
             self.container_combobox.current(1)
 
+    def pick_file(self) -> None:
+        file_path = filedialog.askopenfilename(initialdir="/", title="Select File",
+                                               filetypes=(("Video Files", "*.mkv *.avi"), ("All files", "*.*")))
+        if file_path:
+            self.file_path_entry.delete(0, tk.END)
+            self.file_path_entry.insert(0, file_path)
+        else:
+            return None
+
+        self.extrair(file_path)
+
+    def abrir_thread_file(self):
+        threading.Thread(target=self.pick_file).start()
+
     @staticmethod
     def formatar_bitrate(bitrate: list) -> Optional[str]:
         if not bitrate:
@@ -558,7 +567,7 @@ class App:
         bstring = str(bitrate[0])
         if "M" in bstring:
             return bstring
-        if not any(char in bstring for char in ('G', 'B', 'K', 'M')):
+        if not any(char in bstring for char in ('kb', 'M')):
             return bstring
         bstring = bstring.replace(' ', '')
         kindex = bstring.index("k")
@@ -595,7 +604,6 @@ class App:
         else:
             acodec: str = ""
             abitrate: str = ""
-
         metadata = {
             "vcodec": self.substituir_codec(general.get("codecs_video", ""), None),
             "acodec": acodec,
