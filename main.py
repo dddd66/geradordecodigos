@@ -90,7 +90,7 @@ class App:
         self.frame.grid_rowconfigure(2, weight=0)
         self.frame.grid_columnconfigure(0, weight=1)
 
-    def create_movie_info_section(self):
+    def create_movie_info_section(self) -> None:
         self.titulo_brasil_label = tk.Label(self.topo, text="Título no Brasil:", fg="red", padx=2, pady=2)
         self.titulo_brasil_label.grid(row=0, column=0, sticky="e")
         self.titulo_brasil_entry = tk.Entry(self.topo)
@@ -311,49 +311,8 @@ class App:
         critica_scroll.grid(row=2, column=5, sticky='nsew')
         self.critica_entry.config(yscrollcommand=critica_scroll.set)
 
-    def limpar(self) -> None:
-        entry_widgets = [
-            self.titulo_brasil_entry,
-            self.titulo_original_entry,
-            self.ano_entry,
-            self.sinopse_entry,
-            self.elenco_entry,
-            self.pais_de_origem_entry,
-            self.diretor_entry,
-            self.genero_entry,
-            self.qualidade_combobox,
-            self.duracao_entry,
-            self.imdb_entry,
-            self.idioma_do_audio_entry,
-            self.videocodec_entry,
-            self.videobitrate_entry,
-            self.audiocodec_entry,
-            self.audiobitrate_entry,
-            self.legendas_combobox,
-            self.container_combobox,
-            self.resolucao_entry,
-            self.aspectratio_entry,
-            self.framerate_entry,
-            self.tamanho_entry,
-            self.poster_entry,
-            self.release_entry,
-            self.premiacoes_entry,
-            self.curiosidade_entry,
-            self.critica_entry
-        ]
-        for widget in entry_widgets:
-            if isinstance(widget, tk.Text):
-                widget.delete("1.0", tk.END)
-            else:
-                widget.delete(0, tk.END)
-        for entry in self.screenshot_entries:
-            entry.delete(0, tk.END)
-        self.qualidade_combobox.set('')
-        self.container_combobox.set('')
-        self.legendas_combobox.set('')
-
     def processar_input(self) -> None:
-        fields_necessarios = [
+        fields_necessarios: list = [
             self.titulo_brasil_entry,
             self.titulo_original_entry,
             self.sinopse_entry,
@@ -398,7 +357,7 @@ class App:
             return
 
         data_valores = {}
-        entries = [
+        entries: list = [
             (self.titulo_brasil_entry, "titulonobrasil"),
             (self.titulo_original_entry, "titulooriginal"),
             (self.sinopse_entry, "sinopse"),
@@ -454,9 +413,46 @@ class App:
 
         copy_button.pack(anchor="s", expand=True, ipadx=5, ipady=5)
 
-    def copiar_para_teclado(self, widget) -> None:
-        self.window.clipboard_clear()
-        self.window.clipboard_append(widget.get("1.0", tk.END))
+    def limpar(self) -> None:
+        entry_widgets = [
+            self.titulo_brasil_entry,
+            self.titulo_original_entry,
+            self.ano_entry,
+            self.sinopse_entry,
+            self.elenco_entry,
+            self.pais_de_origem_entry,
+            self.diretor_entry,
+            self.genero_entry,
+            self.qualidade_combobox,
+            self.duracao_entry,
+            self.imdb_entry,
+            self.idioma_do_audio_entry,
+            self.videocodec_entry,
+            self.videobitrate_entry,
+            self.audiocodec_entry,
+            self.audiobitrate_entry,
+            self.legendas_combobox,
+            self.container_combobox,
+            self.resolucao_entry,
+            self.aspectratio_entry,
+            self.framerate_entry,
+            self.tamanho_entry,
+            self.poster_entry,
+            self.release_entry,
+            self.premiacoes_entry,
+            self.curiosidade_entry,
+            self.critica_entry
+        ]
+        for widget in entry_widgets:
+            if isinstance(widget, tk.Text):
+                widget.delete("1.0", tk.END)
+            else:
+                widget.delete(0, tk.END)
+        for entry in self.screenshot_entries:
+            entry.delete(0, tk.END)
+        self.qualidade_combobox.set('')
+        self.container_combobox.set('')
+        self.legendas_combobox.set('')
 
     @staticmethod
     def gerar_codigo(data: dict) -> str:
@@ -515,6 +511,10 @@ class App:
 [/tr][/tablePrinc]"
         return codigo
 
+    def copiar_para_teclado(self, widget) -> None:
+        self.window.clipboard_clear()
+        self.window.clipboard_append(widget.get("1.0", tk.END))
+
     def extrair(self, file_path: str) -> None:
         mi = self.extrair_metadata(file_path)
         self.window.after(0, self.atualizar_fields_metadata, mi)
@@ -557,7 +557,7 @@ class App:
 
         self.extrair(file_path)
 
-    def abrir_thread_file(self):
+    def abrir_thread_file(self) -> None:
         threading.Thread(target=self.pick_file).start()
 
     @staticmethod
@@ -575,7 +575,7 @@ class App:
 
     @staticmethod
     def substituir_codec(codec, track) -> str:
-        codec_map = {
+        codec_map: dict = {
             "AVC": "h264",
             "XVID": "XviD",
             "A_MPEG/L3": "MP3",
@@ -605,7 +605,7 @@ class App:
             acodec: str = ""
             abitrate: str = ""
 
-        metadata = {
+        metadata: dict = {
             "vcodec": self.substituir_codec(general.get("codecs_video", ""), None),
             "acodec": acodec,
             "vbitrate": self.formatar_bitrate(video_track.get("other_bit_rate", "")),
