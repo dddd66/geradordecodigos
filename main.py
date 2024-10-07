@@ -585,18 +585,27 @@ class App:
         tracks = video.get("tracks")
         general = tracks[0]
         video_track = tracks[1]
-        audio_track = tracks[2]
-        metadata = {"vcodec": self.substituir_codec(general.get("codecs_video", ""), None),
-                    "acodec": self.substituir_codec(general.get("audio_codecs", ""), audio_track),
-                    "vbitrate": self.formatar_bitrate(video_track.get("other_bit_rate", "")),
-                    "abitrate": self.formatar_bitrate(audio_track.get("other_bit_rate", "")),
-                    "resolucao": f'{video_track.get("sampled_width", "")} x {video_track.get("sampled_height", "")}',
-                    "aspectratio": video_track.get("other_display_aspect_ratio", ""),
-                    "fps": video_track.get("frame_rate", ""),
-                    "tamanho": "{:.2f} GiB".format(self.to_gib(float(general.get("file_size", "")))),
-                    "release": os.path.basename(general.get("file_name", "")),
-                    "ext": general.get("file_extension", "")
-                    }
+        audio_track = tracks[2] if tracks[2]['track_type'] == "Audio" else None
+
+        if audio_track is not None:
+            acodec: str = self.substituir_codec(general.get("audio_codecs", ""), audio_track)
+            abitrate: str = self.formatar_bitrate(audio_track.get("other_bit_rate", ""))
+        else:
+            acodec: str = ""
+            abitrate: str = ""
+
+        metadata = {
+            "vcodec": self.substituir_codec(general.get("codecs_video", ""), None),
+            "acodec": acodec,
+            "vbitrate": self.formatar_bitrate(video_track.get("other_bit_rate", "")),
+            "abitrate": abitrate,
+            "resolucao": f'{video_track.get("sampled_width", "")} x {video_track.get("sampled_height", "")}',
+            "aspectratio": video_track.get("other_display_aspect_ratio", ""),
+            "fps": video_track.get("frame_rate", ""),
+            "tamanho": "{:.2f} GiB".format(self.to_gib(float(general.get("file_size", "")))),
+            "release": os.path.basename(general.get("file_name", "")),
+            "ext": general.get("file_extension", "")
+        }
         return metadata
 
 
