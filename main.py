@@ -566,11 +566,13 @@ class App:
 
     @staticmethod
     def substituir_codec(codec, track) -> str:
-        codec_map = {"AVC": "h264",
-                     "XVID": "XviD",
-                     "A_MPEG/L3": "MP3",
-                     "A_MPEG/L2": "MP2",
-                     "A_MPEG/L1": "MP1"}
+        codec_map = {
+            "AVC": "h264",
+            "XVID": "XviD",
+            "A_MPEG/L3": "MP3",
+            "A_MPEG/L2": "MP2",
+            "A_MPEG/L1": "MP1"
+        }
         if track is not None:
             if track.get('commercial_name') == "MPEG Audio":
                 codec = track.get('codec_id')
