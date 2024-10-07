@@ -604,6 +604,7 @@ class App:
         else:
             acodec: str = ""
             abitrate: str = ""
+
         metadata = {
             "vcodec": self.substituir_codec(general.get("codecs_video", ""), None),
             "acodec": acodec,
